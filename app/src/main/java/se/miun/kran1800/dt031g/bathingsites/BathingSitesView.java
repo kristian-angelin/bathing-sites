@@ -31,7 +31,7 @@ public class BathingSitesView extends ConstraintLayout {
 
     private void init(Context context, AttributeSet attrs) {
         // Load attributes
-        inflate(context, R.layout.bathing_sites_view, this);
+        inflate(context, R.layout.view_bathing_sites, this);
         titleText = findViewById(R.id.bathing_title);
         titleText.setText(sitesCount + R.string.bathing_sites);
     }

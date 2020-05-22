@@ -33,6 +33,7 @@ public class BathingSitesView extends ConstraintLayout {
         // Load attributes
         inflate(context, R.layout.view_bathing_sites, this);
         titleText = findViewById(R.id.bathing_title);
-        titleText.setText(sitesCount + R.string.bathing_sites);
+        CharSequence bathText = sitesCount + " " + getResources().getString(R.string.bathing_sites);
+        titleText.setText(bathText);
     }
 }

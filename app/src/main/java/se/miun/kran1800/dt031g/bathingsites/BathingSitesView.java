@@ -12,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class BathingSitesView extends ConstraintLayout {
 
     private int sitesCount = 0;
-    private TextView titleText;
 
     public BathingSitesView(Context context) {
         super(context);
@@ -32,8 +31,20 @@ public class BathingSitesView extends ConstraintLayout {
     private void init(Context context, AttributeSet attrs) {
         // Load attributes
         inflate(context, R.layout.view_bathing_sites, this);
-        titleText = findViewById(R.id.bathing_title);
+        displaySitesCount();
+    }
+
+    private void displaySitesCount() {
+        TextView titleText = findViewById(R.id.bathing_title);
         CharSequence bathText = sitesCount + " " + getResources().getString(R.string.bathing_sites);
         titleText.setText(bathText);
+    }
+
+    private void setSitesCount(int count) {
+        sitesCount = count;
+    }
+
+    private int getSitesCount() {
+        return sitesCount;
     }
 }

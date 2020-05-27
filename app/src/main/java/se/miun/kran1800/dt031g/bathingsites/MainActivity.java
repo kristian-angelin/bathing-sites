@@ -1,5 +1,6 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(getApplicationContext(), NewBathingSiteActivity.class);
+                startActivity(intent);
             }
         });
     }

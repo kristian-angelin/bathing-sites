@@ -20,4 +20,12 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Bathing site fragment -->
+    <fragment
+        android:id="@+id/bath_fragment"
+        android:name="se.miun.kran1800.dt031g.bathingsites.NewBathingSiteActivityFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

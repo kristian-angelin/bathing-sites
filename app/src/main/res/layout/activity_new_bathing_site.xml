@@ -20,12 +20,15 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Bathing site fragment -->
-    <fragment
-        android:id="@+id/bath_fragment"
-        android:name="se.miun.kran1800.dt031g.bathingsites.NewBathingSiteActivityFragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent">
+        <!-- Bathing site fragment -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bath_fragment"
+            android:name="se.miun.kran1800.dt031g.bathingsites.NewBathingSiteActivityFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

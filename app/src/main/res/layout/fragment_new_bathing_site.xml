@@ -18,7 +18,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Name"/>
+                android:hint="@string/form_name"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -27,7 +27,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Description"/>
+                android:hint="@string/form_description"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -36,7 +36,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="Address"/>
+                android:hint="@string/form_address"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -52,7 +52,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Latitude" />
+                    android:hint="@string/form_latitude" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -63,7 +63,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Longitude" />
+                    android:hint="@string/form_longitude" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
@@ -73,7 +73,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="GRADE"/>
+                android:hint="@string/form_grade"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -89,7 +89,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Water temp" />
+                    android:hint="@string/form_water_temp" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -100,7 +100,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Date for temp" />
+                    android:hint="@string/form_date_for_temp" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

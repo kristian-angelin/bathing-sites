@@ -5,4 +5,13 @@
     <string name="bath_img_description">bathing sign</string>
     <string name="title_activity_new_bathing_site">New Bathing Site</string>
 
+    <!-- New bathing site form field strings -->
+    <string name="form_name">Name</string>
+    <string name="form_description">Description</string>
+    <string name="form_address">Address</string>
+    <string name="form_latitude">Latitude</string>
+    <string name="form_longitude">Longitude</string>
+    <string name="form_grade">Grade</string>
+    <string name="form_water_temp">Water temp</string>
+    <string name="form_date_for_temp">Date for temp</string>
 </resources>

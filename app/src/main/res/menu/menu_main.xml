@@ -2,8 +2,8 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/store_numbers_settings"
-        android:title="PLACEHOLDER"
-        app:showAsAction="never"/>
 
+    <item android:id="@+id/bathing_site_settings"
+        android:title="@string/menu_settings"
+        app:showAsAction="never"/>
 </menu>

@@ -1,4 +1,10 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="bathing_sites_count">24sp</dimen>
+
+    <!-- New bathing site form dimensions -->
+    <dimen name="form_label_size">18sp</dimen>
+    <dimen name="form_padding_size">10sp</dimen>
+    <dimen name="form_grade_margin_start">2dp</dimen>
+    <dimen name="form_grade_margin_top">10dp</dimen>
 </resources>

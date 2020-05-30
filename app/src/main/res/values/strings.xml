@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Bathing Sites</string>
+
     <!-- Bathing sites main page -->
     <string name="bathing_sites">bathing sites</string>
     <string name="bath_img_description">bathing sign</string>
     <string name="title_activity_new_bathing_site">New Bathing Site</string>
+
+    <!-- Bathing site menu strings -->
+    <string name="menu_settings">Settings</string>
 
     <!-- New bathing site form field strings -->
     <string name="form_name">Name</string>
@@ -14,4 +18,8 @@
     <string name="form_grade">Grade</string>
     <string name="form_water_temp">Water temp</string>
     <string name="form_date_for_temp">Date for temp</string>
+    
+    <!-- New bathing site menu strings -->
+    <string name="menu_clear">Clear</string>
+    <string name="menu_save">Save</string>
 </resources>

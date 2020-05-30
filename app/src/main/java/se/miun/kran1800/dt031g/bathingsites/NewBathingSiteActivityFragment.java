@@ -4,9 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class NewBathingSiteActivityFragment extends Fragment {
 
@@ -21,6 +26,15 @@ public class NewBathingSiteActivityFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        setCurrentDate();
+    }
 
+    // Set the current date as default value in date field of form.
+    private void setCurrentDate() {
+        TextView dateField = getView().findViewById(R.id.form_date_field);
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String currentDate = dateFormat.format(calendar.getTime());
+        dateField.setText(currentDate);
     }
 }

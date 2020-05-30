@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/form_name_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/form_name"/>
@@ -27,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/form_desc_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/form_description"/>
@@ -37,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/form_address_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/form_address"/>
@@ -53,6 +56,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_latitude_field"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/form_latitude"
@@ -64,6 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_longitude_field"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/form_longitude"
@@ -99,6 +104,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_temp_field"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/form_water_temp"
@@ -110,6 +116,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/form_date_field"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/form_date_for_temp"

@@ -24,7 +24,7 @@
 
     <!-- Bathing site fragment -->
     <fragment
-        android:id="@+id/bath_fragment"
+        android:id="@+id/fragment_new_bathing_site"
         android:name="se.miun.kran1800.dt031g.bathingsites.BathingSitesFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

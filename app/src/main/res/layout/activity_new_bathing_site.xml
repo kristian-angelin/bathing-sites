@@ -26,7 +26,7 @@
         android:layout_height="match_parent">
         <!-- Bathing site fragment -->
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/bath_fragment"
+            android:id="@+id/fragment_new_bathing_site"
             android:name="se.miun.kran1800.dt031g.bathingsites.NewBathingSiteActivityFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

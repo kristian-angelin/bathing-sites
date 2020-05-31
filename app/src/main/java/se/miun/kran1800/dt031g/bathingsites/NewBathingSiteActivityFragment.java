@@ -89,9 +89,11 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         gradeBar.setRating(0);
         tempField.setText("");
         setDefaultDate();
+        clearErrors();
         clearFocus();
     }
 
+    // Save bathing site by showing a toast.
     public void saveBatingSite() {
         if(validFormEntries()) {
             String toastMsg = "Name: " + nameField.getText().toString() + "\n"
@@ -102,7 +104,6 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
                             + "Grade: " + gradeBar.getRating() + "\n"
                             + "water temo: " + tempField.getText().toString() + "\n"
                             + "Date for temp: " + dateField.getText().toString() + "\n";
-            Log.d("TOAST:", toastMsg);
             Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
         }
     }
@@ -116,20 +117,44 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
             validStatus = false;
         }
         // Validate position fields, must have either address or long/lat.
-        if(nameField.getText().toString().trim().isEmpty()) {
-            if(latField.getText().toString().trim().isEmpty() &&
-                    longField.getText().toString().trim().isEmpty()) {
-                validStatus = false;
+        if(addressField.getText().toString().trim().isEmpty()) {
+            if(latField.getText().toString().trim().isEmpty() || longField.getText().toString().trim().isEmpty()) {
                 addressField.setError(getString(R.string.error_no_position));
                 latField.setError(getString(R.string.error_no_position));
                 longField.setError(getString(R.string.error_no_position));
+                validStatus = false;
+            }
+            // If lat/long is set remove error on address.
+            else {
+                addressField.setError(null);
             }
         }
-        // Remove error messages if form is valid.
-        if(validStatus) {
-            addressField.setError(null);
+        // If address is set, remove error on lat/long.
+        else {
             latField.setError(null);
             longField.setError(null);
+        }
+        // Check correct lat/long
+        // Check empty string before cast do double
+        if(!latField.getText().toString().trim().isEmpty()) {
+            double latitude = Double.parseDouble(latField.getText().toString());
+            if(latitude < -90 || latitude > 90) {
+                latField.setError(getString(R.string.error_invalid_lat));
+                validStatus = false;
+            }
+        }
+        // Check empty string before cast do double
+        if(!longField.getText().toString().trim().isEmpty()) {
+            double longitude = Double.parseDouble(longField.getText().toString());
+            if(longitude < -180 || longitude > 180) {
+                longField.setError(getString(R.string.error_invalid_long));
+                validStatus = false;
+            }
+        }
+
+        // Remove error messages if form is valid.
+        if(validStatus) {
+            clearErrors();
         }
         clearFocus();
         return validStatus;
@@ -165,5 +190,13 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         }
         LinearLayout formLayout = getView().findViewById(R.id.form_layout);
         formLayout.requestFocus();
+    }
+
+    // Clear all form errors
+    private void clearErrors() {
+        nameField.setError(null);
+        addressField.setError(null);
+        latField.setError(null);
+        longField.setError(null);
     }
 }

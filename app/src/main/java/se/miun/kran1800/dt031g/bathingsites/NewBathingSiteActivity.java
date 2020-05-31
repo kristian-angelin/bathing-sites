@@ -2,8 +2,6 @@ package se.miun.kran1800.dt031g.bathingsites;
 
 import android.os.Bundle;
 
-import com.google.android.material.textfield.TextInputEditText;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,9 +9,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.RatingBar;
 
 public class NewBathingSiteActivity extends AppCompatActivity {
 
@@ -65,8 +60,6 @@ public class NewBathingSiteActivity extends AppCompatActivity {
 
     private void clearForm() {
         bathingSiteForm.clearForm();
-        //View view = this.getCurrentFocus();
-
     }
 
     private void saveForm() {

@@ -134,10 +134,11 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
             latField.setError(null);
             longField.setError(null);
         }
-        // Check correct lat/long
+
         // Check empty string before cast do double
         if(!latField.getText().toString().trim().isEmpty()) {
             double latitude = Double.parseDouble(latField.getText().toString());
+            // Check correct latitude
             if(latitude < -90 || latitude > 90) {
                 latField.setError(getString(R.string.error_invalid_lat));
                 validStatus = false;
@@ -146,6 +147,7 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         // Check empty string before cast do double
         if(!longField.getText().toString().trim().isEmpty()) {
             double longitude = Double.parseDouble(longField.getText().toString());
+            // Check correct longitude
             if(longitude < -180 || longitude > 180) {
                 longField.setError(getString(R.string.error_invalid_long));
                 validStatus = false;

@@ -1,13 +1,17 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -57,7 +61,7 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         tempField = getView().findViewById(R.id.form_temp_field);
         dateField = getView().findViewById(R.id.form_date_field);
         // Set date
-        setDefaultDate();
+        clearForm();
 
         // Setup click event on date field.
         dateField.setOnClickListener(new View.OnClickListener(){
@@ -85,10 +89,50 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         gradeBar.setRating(0);
         tempField.setText("");
         setDefaultDate();
+        clearFocus();
     }
 
     public void saveBatingSite() {
+        if(validFormEntries()) {
+            String toastMsg = "Name: " + nameField.getText().toString() + "\n"
+                            + "Description: " + descField.getText().toString() + "\n"
+                            + "Address: " + addressField.getText().toString() + "\n"
+                            + "Latitude: " + latField.getText().toString() + "\n"
+                            + "Longitude: " + longField.getText().toString() + "\n"
+                            + "Grade: " + gradeBar.getRating() + "\n"
+                            + "water temo: " + tempField.getText().toString() + "\n"
+                            + "Date for temp: " + dateField.getText().toString() + "\n";
+            Log.d("TOAST:", toastMsg);
+            Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+        }
+    }
 
+    // Validate form and display error messages.
+    private boolean validFormEntries() {
+        boolean validStatus = true;
+        // Validate name field.
+        if(nameField.getText().toString().trim().isEmpty()) {
+            nameField.setError(getString(R.string.error_no_name));
+            validStatus = false;
+        }
+        // Validate position fields, must have either address or long/lat.
+        if(nameField.getText().toString().trim().isEmpty()) {
+            if(latField.getText().toString().trim().isEmpty() &&
+                    longField.getText().toString().trim().isEmpty()) {
+                validStatus = false;
+                addressField.setError(getString(R.string.error_no_position));
+                latField.setError(getString(R.string.error_no_position));
+                longField.setError(getString(R.string.error_no_position));
+            }
+        }
+        // Remove error messages if form is valid.
+        if(validStatus) {
+            addressField.setError(null);
+            latField.setError(null);
+            longField.setError(null);
+        }
+        clearFocus();
+        return validStatus;
     }
 
     // Creates and display a date picker dialog.
@@ -110,5 +154,16 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         String selectedDate = dateFormat.format(calendar.getTime());
         dateField.setText(selectedDate);
+    }
+
+    // Clear focused object and hide keyboard.
+    private void clearFocus() {
+        View view = getActivity().getCurrentFocus();
+        if(view != null) {
+            InputMethodManager inputMan = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMan.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        LinearLayout formLayout = getView().findViewById(R.id.form_layout);
+        formLayout.requestFocus();
     }
 }

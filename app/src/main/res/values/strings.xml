@@ -18,6 +18,8 @@
     <string name="form_grade">Grade</string>
     <string name="form_water_temp">Water temp</string>
     <string name="form_date_for_temp">Date for temp</string>
+    <string name="error_no_name">Name is required!</string>
+    <string name="error_no_position">Address OR latitude/longitude are required!</string>
     
     <!-- New bathing site menu strings -->
     <string name="menu_clear">Clear</string>

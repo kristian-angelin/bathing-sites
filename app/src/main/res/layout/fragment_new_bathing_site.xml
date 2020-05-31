@@ -87,7 +87,7 @@
             android:layout_marginStart="@dimen/form_grade_margin_start"/>
 
         <androidx.appcompat.widget.AppCompatRatingBar
-            android:id="@+id/rating_bar"
+            android:id="@+id/form_rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:numStars="5"

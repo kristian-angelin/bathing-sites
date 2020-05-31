@@ -119,8 +119,8 @@
                     android:id="@+id/form_date_field"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/form_date_for_temp"
-                    android:inputType="date"/>
+                    android:focusable="false"
+                    android:hint="@string/form_date_for_temp" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

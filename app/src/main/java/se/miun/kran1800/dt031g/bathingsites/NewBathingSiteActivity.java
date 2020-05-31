@@ -53,6 +53,9 @@ public class NewBathingSiteActivity extends AppCompatActivity {
             case R.id.menu_item_clear:
                 clearForm();
                 return true;
+            case R.id.menu_item_save:
+                saveForm();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -62,4 +65,7 @@ public class NewBathingSiteActivity extends AppCompatActivity {
         bathingSiteForm.clearForm();
     }
 
+    private void saveForm() {
+        bathingSiteForm.saveBatingSite();
+    }
 }

@@ -30,6 +30,10 @@
     <string name="menu_weather">Weather</string>
     <string name="title_activity_settings">Settings</string>
 
+    <!-- New bathing site dialog strings -->
+    <string name="title_current_weather">Current weather</string>
+    <string name="getting_weather">Getting current weather…</string>
+
     <!-- Settings strings -->
     <!-- Preference Titles -->
     <string name="weather_header">Weather</string>

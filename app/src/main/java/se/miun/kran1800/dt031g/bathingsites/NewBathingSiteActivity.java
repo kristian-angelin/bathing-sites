@@ -1,12 +1,15 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,6 +68,12 @@ public class NewBathingSiteActivity extends AppCompatActivity {
 
     private void saveForm() {
         bathingSiteForm.saveBatingSite();
+    }
+
+    public void getCurrentWeather(MenuItem item) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url));
+        new DownloadWeatherTask(this).execute(weatherUrl);
     }
 
     public void startSettingsActivity (MenuItem menuItem) {

@@ -21,7 +21,7 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         builder = new AlertDialog.Builder(context);
-        builder.setView(R.layout.dialog_download_weather_layout);
+        builder.setView(R.layout.dialog_get_weather_layout);
         alertDialog = builder.create();
         alertDialog.show();
     }

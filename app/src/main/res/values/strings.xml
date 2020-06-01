@@ -18,13 +18,24 @@
     <string name="form_grade">Grade</string>
     <string name="form_water_temp">Water temp</string>
     <string name="form_date_for_temp">Date for temp</string>
+    <!-- Form error messages -->
     <string name="error_no_name">Name is required!</string>
     <string name="error_no_position">Address OR latitude/longitude are required!</string>
     <string name="error_invalid_lat">Range -90 to 90!</string>
     <string name="error_invalid_long">Range -180 to 180!</string>
-    
+
     <!-- New bathing site menu strings -->
     <string name="menu_clear">Clear</string>
     <string name="menu_save">Save</string>
     <string name="menu_weather">Weather</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Settings strings -->
+    <!-- Preference Titles -->
+    <string name="weather_header">Weather</string>
+
+    <!-- Weather Preferences -->
+    <string name="weather_title">Weather data URL</string>
+    <string name="default_weather_url">https://dt031g.programvaruteknik.nu/bathingsites/weather.php</string>
+
 </resources>

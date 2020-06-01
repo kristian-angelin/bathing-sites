@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
@@ -38,5 +39,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
+    public void startSettingsActivity (MenuItem menuItem) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 }

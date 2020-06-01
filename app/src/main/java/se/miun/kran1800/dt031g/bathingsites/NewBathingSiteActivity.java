@@ -1,5 +1,6 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -64,5 +65,10 @@ public class NewBathingSiteActivity extends AppCompatActivity {
 
     private void saveForm() {
         bathingSiteForm.saveBatingSite();
+    }
+
+    public void startSettingsActivity (MenuItem menuItem) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }

@@ -6,7 +6,7 @@
     <string name="bath_img_description">bathing sign</string>
     <string name="title_activity_new_bathing_site">New Bathing Site</string>
 
-    <!-- Bathing site menu strings -->
+    <!-- Universal menu strings -->
     <string name="menu_settings">Settings</string>
 
     <!-- New bathing site form field strings -->
@@ -26,4 +26,5 @@
     <!-- New bathing site menu strings -->
     <string name="menu_clear">Clear</string>
     <string name="menu_save">Save</string>
+    <string name="menu_weather">Weather</string>
 </resources>

@@ -73,7 +73,8 @@ public class NewBathingSiteActivity extends AppCompatActivity {
     public void getCurrentWeather(MenuItem item) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url));
-        new DownloadWeatherTask(this).execute(weatherUrl);
+        String imageUrl = getString(R.string.default_weather_icon_url);
+        new DownloadWeatherTask(this).execute(weatherUrl, imageUrl);
     }
 
     public void startSettingsActivity (MenuItem menuItem) {

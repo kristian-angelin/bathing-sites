@@ -41,5 +41,6 @@
     <!-- Weather Preferences -->
     <string name="weather_title">Weather data URL</string>
     <string name="default_weather_url">https://dt031g.programvaruteknik.nu/bathingsites/weather.php</string>
+    <string name="default_weather_icon_url">https://openweathermap.org/img/w/</string>
 
 </resources>

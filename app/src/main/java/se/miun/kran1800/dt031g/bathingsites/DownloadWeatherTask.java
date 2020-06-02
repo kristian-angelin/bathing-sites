@@ -1,6 +1,7 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -24,6 +25,7 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
     private AlertDialog getWeatherDialog;
     private AlertDialog currentWeatherDialog;
     private String serverResponse;
+    private JSONObject jsonObject;
     // Constructor to pass context
     DownloadWeatherTask (Context context) {
         this.context = context;
@@ -48,7 +50,7 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
         String imageUrl = url[1];
         HttpURLConnection connection = null;
         weatherUrl = weatherUrl.concat("?q=Stockholm"); //TODO: REMOVE TEST
-
+        boolean weatherGetSuccess = false;
         try {
             // Establish connection to weather site
             URL forecastURL = new URL(weatherUrl); // TODO: Rename forecastURL and/or weatherUrl
@@ -66,7 +68,7 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
 
             // Check if connection was successful before
             if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
+                weatherGetSuccess = true;
             }
 
         } catch (Exception e) {
@@ -75,6 +77,35 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
         finally {
             if(connection != null) {
                 connection.disconnect();
+            }
+        }
+        // If weather was successfully returned, load image.
+        if(weatherGetSuccess) {
+            try {
+                // Parse the icon value to end of URL.
+                JSONObject weather = jsonObject.getJSONObject("weather");
+                imageUrl = imageUrl + jsonObject.getString("icon") + ".png";
+
+                // Establish connection to weather site
+                URL forecastURL = new URL(imageUrl); // TODO: Rename forecastURL and/or weatherUrl
+                connection = (HttpURLConnection) forecastURL.openConnection();
+                connection.connect();
+
+                Drawable d = Drawable.createFromStream(forecastURL.openStream(), jsonObject.getString("icon") + ".png");
+                // Get the response
+                InputStream inputStream = connection.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                serverResponse = bufferedReader.readLine();
+
+
+            } catch (Exception e) {
+                Log.d("Exception message", e.toString());
+            }
+            finally {
+                if(connection != null) {
+                    connection.disconnect();
+                }
             }
         }
         return null;

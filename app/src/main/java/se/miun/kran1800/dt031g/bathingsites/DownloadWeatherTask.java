@@ -4,9 +4,15 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -14,18 +20,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Locale;
 
 // Download weather and display dialog.
 public class DownloadWeatherTask extends AsyncTask<String, String, String> {
 
-    private Context context = null; // TODO: Add a weak reference?
+    private Context context;
 
-    private AlertDialog.Builder builder;
     private AlertDialog getWeatherDialog;
-    private AlertDialog currentWeatherDialog;
-    private String serverResponse;
-    private JSONObject jsonObject;
+
+    // Data fields from weather download
+    private String imageName;
+    private String weatherDescription;
+    private double weatherTemp;
+
+    private Drawable weatherImage; // Image for weather dialog
+
     // Constructor to pass context
     DownloadWeatherTask (Context context) {
         this.context = context;
@@ -34,41 +43,58 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        // Create dialogs
-        builder = new AlertDialog.Builder(context);
+        // Create download dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(R.layout.dialog_get_weather_layout);
         getWeatherDialog = builder.create();
-        builder.setView(R.layout.dialog_current_weather_layout);
-        currentWeatherDialog = builder.create();
-
         getWeatherDialog.show();
     }
 
     @Override
     protected String doInBackground(String... url) {
-        String weatherUrl = url[0];
+        // Save url strings.
+        String forecastUrl = url[0];
         String imageUrl = url[1];
+
+        boolean downloadSuccess = downloadForecast(forecastUrl);
+
+        // If weather data was successfully returned, load image.
+        if(downloadSuccess) {
+            downloadWeatherImage(imageUrl);
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        getWeatherDialog.hide();
+        showForecastDialog();
+    }
+
+    // Download forecast and return true if succeeded.
+    private boolean downloadForecast(String forecastUrl) {
+        boolean result = false;
         HttpURLConnection connection = null;
-        weatherUrl = weatherUrl.concat("?q=Stockholm"); //TODO: REMOVE TEST
-        boolean weatherGetSuccess = false;
+        forecastUrl = forecastUrl.concat("?q=Stockholm"); //TODO: REMOVE TEST
         try {
             // Establish connection to weather site
-            URL forecastURL = new URL(weatherUrl); // TODO: Rename forecastURL and/or weatherUrl
+            URL forecastURL = new URL(forecastUrl);
             connection = (HttpURLConnection) forecastURL.openConnection();
             connection.connect();
 
-            // Get the response
+            // Get the request response.
             InputStream inputStream = connection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            serverResponse = bufferedReader.readLine();
+            String serverResponse = bufferedReader.readLine();
 
-            // Convert response to json object for ease of use.
-            JSONObject jsonObject = new JSONObject(serverResponse);
+            // Convert response to json object and parse it.
+            parseWeatherData(new JSONObject(serverResponse));
 
-            // Check if connection was successful before
+            // Check if the request returned ok.
             if(connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                weatherGetSuccess = true;
+                result = true;
             }
 
         } catch (Exception e) {
@@ -79,49 +105,62 @@ public class DownloadWeatherTask extends AsyncTask<String, String, String> {
                 connection.disconnect();
             }
         }
-        // If weather was successfully returned, load image.
-        if(weatherGetSuccess) {
-            try {
-                // Parse the icon value to end of URL.
-                JSONObject weather = jsonObject.getJSONObject("weather");
-                imageUrl = imageUrl + jsonObject.getString("icon") + ".png";
+        return result;
+    }
 
-                // Establish connection to weather site
-                URL forecastURL = new URL(imageUrl); // TODO: Rename forecastURL and/or weatherUrl
-                connection = (HttpURLConnection) forecastURL.openConnection();
-                connection.connect();
+    // Takes weather JSON data and parse correct variable types.
+    private void parseWeatherData(JSONObject jsonWeatherObject) {
+        // Parse the icon value to end of URL.
+        try {
+            // Parse description and image name.
+            JSONArray weatherArray = jsonWeatherObject.getJSONArray("weather");
+            JSONObject weatherObj = weatherArray.getJSONObject(0);
+            weatherDescription = weatherObj.getString("description");
+            imageName = weatherObj.getString("icon") + ".png";
 
-                Drawable d = Drawable.createFromStream(forecastURL.openStream(), jsonObject.getString("icon") + ".png");
-                // Get the response
-                InputStream inputStream = connection.getInputStream();
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                serverResponse = bufferedReader.readLine();
-
-
-            } catch (Exception e) {
-                Log.d("Exception message", e.toString());
-            }
-            finally {
-                if(connection != null) {
-                    connection.disconnect();
-                }
-            }
+            // Parse temp
+            JSONObject mainObj = jsonWeatherObject.getJSONObject("main");
+            weatherTemp = mainObj.getDouble("temp");
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return null;
     }
 
-    @Override
-    protected void onProgressUpdate(String... values) {
-        super.onProgressUpdate(values);
+    // Download weather image.
+    private void downloadWeatherImage(String imageUrl) {
+        try {
+            // File name to end of URL String.
+            imageUrl = imageUrl + imageName;
+
+            // Create URL object and open stream.
+            URL imageURL = new URL(imageUrl);
+            weatherImage = Drawable.createFromStream(imageURL.openStream(), imageName);
+
+        } catch (Exception e) {
+            Log.d("Exception message", e.toString());
+        }
     }
 
-    @Override
-    protected void onPostExecute(String s) {
-        getWeatherDialog.hide();
-        Log.d("SERVER RESPONSE", serverResponse);
-        currentWeatherDialog.setTitle(serverResponse);
+    // Create and show forecast dialog
+    private void showForecastDialog() {
+        // Load layout into view to enable editing
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View weatherView = inflater.inflate(R.layout.dialog_current_weather_layout, null);
+
+        // Set dialog attributes
+        TextView description = weatherView.findViewById(R.id.current_weather_description);
+        description.setText(weatherDescription);
+
+        TextView temp = weatherView.findViewById(R.id.current_weather_temp);
+        temp.setText(String.valueOf(weatherTemp));
+
+        ImageView image = weatherView.findViewById(R.id.current_weather_image);
+        image.setImageDrawable(weatherImage);
+
+        // Set view and create dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(weatherView);
+        AlertDialog currentWeatherDialog = builder.create();
         currentWeatherDialog.show();
-        super.onPostExecute(s);
     }
 }

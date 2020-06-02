@@ -33,6 +33,7 @@
     <!-- New bathing site dialog strings -->
     <string name="title_current_weather">Current weather</string>
     <string name="getting_weather">Getting current weather…</string>
+    <string name="description_weather_image">Current weather</string>
 
     <!-- Settings strings -->
     <!-- Preference Titles -->

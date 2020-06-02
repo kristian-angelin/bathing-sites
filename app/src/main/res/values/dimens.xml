@@ -7,4 +7,7 @@
     <dimen name="form_padding_size">10sp</dimen>
     <dimen name="form_grade_margin_start">2dp</dimen>
     <dimen name="form_grade_margin_top">10dp</dimen>
+
+    <!-- Current weather dialog -->
+    <dimen name="weather_image_size">100dp</dimen>
 </resources>

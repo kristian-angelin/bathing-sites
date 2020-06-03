@@ -3,6 +3,7 @@ package se.miun.kran1800.dt031g.bathingsites;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,8 +34,8 @@ import java.util.List;
 public class NewBathingSiteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<String>> {
 
     private NewBathingSiteActivityFragment bathingSiteForm;
-    private AlertDialog getForecastDialog;
-    private AlertDialog showForecastDialog;
+    private GetWeatherDialog getWeatherDialog;
+    private ShowWeatherDialog showWeatherDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         setContentView(R.layout.activity_new_bathing_site);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // For rotating
+        if(getSupportLoaderManager().getLoader(0) != null) {
+            getSupportLoaderManager().initLoader(0, null, this);
+        }
 
         // Set up actionbar
         ActionBar ac = getSupportActionBar();
@@ -61,10 +67,11 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
 
     @Override
     protected void onDestroy() {
-        if(getForecastDialog != null) getForecastDialog.cancel();
-        if(showForecastDialog != null) showForecastDialog.cancel();
         super.onDestroy();
+        //if(getForecastDialog != null) getForecastDialog.dismiss();
+        //if(showForecastDialog != null) showForecastDialog.cancel();
     }
+
 
 
     private void initFormFields() {
@@ -107,15 +114,18 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         argsBundle.putString("imageUrl", imageUrl);
 
         // Create download dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(R.layout.dialog_get_weather_layout);
         getForecastDialog = builder.create();
-        getForecastDialog.show();
+        getForecastDialog.setOwnerActivity(this);
+        getForecastDialog.show();*/
+        getWeatherDialog = new GetWeatherDialog();
+        getWeatherDialog.show(getSupportFragmentManager(), "getWeatherDialog");
         Log.d("START CLASS", "before initLoader");
-        getSupportLoaderManager().initLoader(0, argsBundle, this);
+        getSupportLoaderManager().restartLoader(0, argsBundle, this);
         //AlertDialog.Builder builder = new AlertDialog.Builder(context);
         //builder.setView(R.layout.dialog_current_weather_layout);
-        //showForecastDialog = builder.create();*/
+        //showForecastDialog = builder.create();
 
         //new DownloadWeatherTask(this, getForecastDialog, showForecastDialog).execute(weatherUrl, imageUrl);
     }
@@ -135,8 +145,10 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     // Will return info about weather as String[0 = description; 1 = temp; 2 = png as Base64]
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
-        getForecastDialog.hide();
-        LayoutInflater inflater = LayoutInflater.from(this);
+        if(getWeatherDialog != null) {
+            getWeatherDialog.dismiss();
+        }
+        /*LayoutInflater inflater = LayoutInflater.from(this);
         View weatherView = inflater.inflate(R.layout.dialog_current_weather_layout, null);
 
         // Set dialog attributes
@@ -154,17 +166,29 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         // Set image
         ImageView image = weatherView.findViewById(R.id.current_weather_image);
         image.setImageDrawable(weatherImage);
+        */
+        String description = data.get(0);
+        String temp = data.get(1);
 
+        byte[] byteString = Base64.decode(data.get(2), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(byteString, 0, byteString.length);
+        Drawable weatherImage = new BitmapDrawable(getResources(), decodedByte);
+
+
+
+        showWeatherDialog = new ShowWeatherDialog(description, temp, weatherImage);
+        showWeatherDialog.show(getSupportFragmentManager(), "showWeatherDialog");
         // Set view and create dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(weatherView);
         showForecastDialog = builder.create();
-        showForecastDialog.show();
+        showForecastDialog.show();*/
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
     }
+
 
 }

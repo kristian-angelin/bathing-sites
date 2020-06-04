@@ -102,7 +102,7 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
                             + "Latitude: " + latField.getText().toString() + "\n"
                             + "Longitude: " + longField.getText().toString() + "\n"
                             + "Grade: " + gradeBar.getRating() + "\n"
-                            + "water temo: " + tempField.getText().toString() + "\n"
+                            + "water temp: " + tempField.getText().toString() + "\n"
                             + "Date for temp: " + dateField.getText().toString() + "\n";
             Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
         }

@@ -114,6 +114,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         url = url.replace('Ä', 'A');
         url = url.replace('ö', 'o');
         url = url.replace('Ö', 'O');
+        url = url.replace(" ", "");
         Log.d("EDITED URL", url);
         return url;
     }

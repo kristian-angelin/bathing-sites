@@ -23,6 +23,7 @@
     <string name="error_no_position">Address OR latitude/longitude are required!</string>
     <string name="error_invalid_lat">Range -90 to 90!</string>
     <string name="error_invalid_long">Range -180 to 180!</string>
+    <string name="error_invalid_position">Can\'t find position</string>
 
     <!-- New bathing site menu strings -->
     <string name="menu_clear">Clear</string>

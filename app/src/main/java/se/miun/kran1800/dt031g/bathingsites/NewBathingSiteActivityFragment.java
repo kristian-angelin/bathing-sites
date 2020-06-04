@@ -201,4 +201,28 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         latField.setError(null);
         longField.setError(null);
     }
+
+    // Get position as either address or lat/long. Lat/long prioritized.
+    public String getPositionDataAsHttpGet() {
+        if(!latField.getText().toString().equals("") &&
+            !longField.getText().toString().equals("")) {
+                return "?lat=" + latField.getText().toString() +
+                        "&lon=" + longField.getText().toString();
+        }
+        else if(!addressField.getText().toString().equals("")) {
+            return "?q=" + addressField.getText().toString();
+        }
+        // If fields are empty, set error message accordingly.
+        addressField.setError(getString(R.string.error_no_position));
+        latField.setError(getString(R.string.error_no_position));
+        longField.setError(getString(R.string.error_no_position));
+        return null;
+    }
+
+    // Display error message that position can't be found.
+    public void SetErrorPosDoesNotExist() {
+        addressField.setError(getString(R.string.error_invalid_position));
+        latField.setError(getString(R.string.error_invalid_position));
+        longField.setError(getString(R.string.error_invalid_position));
+    }
 }

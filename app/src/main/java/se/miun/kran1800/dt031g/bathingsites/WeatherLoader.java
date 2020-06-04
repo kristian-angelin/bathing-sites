@@ -21,6 +21,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Check if streams need to be closed.
+// TODO: Check if we should use if instead of catching wrong data.
+
 public class WeatherLoader extends AsyncTaskLoader<List<String>> {
 
     // Urls for getting weather data.
@@ -55,6 +58,7 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
     private boolean downloadForecast(String weatherUrl) {
         boolean result = false;
         HttpURLConnection connection = null;
+        BufferedReader bufferedReader = null;
         try {
             // Establish connection to weather site
             URL forecastURL = new URL(weatherUrl);
@@ -64,12 +68,15 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
             // Get the request response.
             InputStream inputStream = connection.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            bufferedReader = new BufferedReader(inputStreamReader);
             String serverResponse = bufferedReader.readLine();
 
             // Convert response to json object and parse it.
             parseWeatherData(new JSONObject(serverResponse));
-
+            // If we cant get weatherData return false
+            if(weatherData == null) {
+                return false;
+            }
             // Check if the request returned ok.
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 result = true;
@@ -104,6 +111,7 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
 
         } catch (JSONException e) {
             e.printStackTrace();
+            weatherData = null;
         }
     }
 
@@ -117,7 +125,7 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
             URL imageURL = new URL(imageUrl);
             InputStream inStream = imageURL.openStream();
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            //byte[] imageBytes = new byte[1024];
+
             int data;
             while ((data = inStream.read()) != -1) {
                 byteArrayOut.write(data);

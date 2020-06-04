@@ -24,6 +24,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
 
     private NewBathingSiteActivityFragment bathingSiteForm;
     private GetWeatherDialog getWeatherDialog;
+    private String weatherUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,6 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         // Set up actionbar
         ActionBar ac = getSupportActionBar();
         ac.setDisplayHomeAsUpEnabled(true);
-
         initFormFields();
     }
 
@@ -54,7 +54,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
                                     R.id.fragment_new_bathing_site);
     }
 
-    // When menu is clicked.
+    // When clicking menu items.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -80,17 +80,42 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     public void getCurrentWeather(MenuItem item) {
         SharedPreferences sharedPreferences =  this.getPreferences(Context.MODE_PRIVATE);
         // TODO: REMOVE DEBUG CODE STOCKHOLM
-        String weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url).concat("?q=Stockholm"));
+        weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url));
         String imageUrl = getString(R.string.default_weather_icon_url);
+        // Check if position is set before getting weather
+        if(bathPositionSet()) {
+            Bundle argsBundle = new Bundle();
+            argsBundle.putString("weatherUrl", weatherUrl);
+            argsBundle.putString("imageUrl", imageUrl);
 
-        Bundle argsBundle = new Bundle();
-        argsBundle.putString("weatherUrl", weatherUrl);
-        argsBundle.putString("imageUrl", imageUrl);
+            getWeatherDialog = GetWeatherDialog.newInstance();
+            getWeatherDialog.show(getSupportFragmentManager(), "getWeatherDialog");
+            Log.d("START CLASS", "before initLoader");
+            getSupportLoaderManager().restartLoader(0, argsBundle, this);
+        }
+    }
 
-        getWeatherDialog = GetWeatherDialog.newInstance();
-        getWeatherDialog.show(getSupportFragmentManager(), "getWeatherDialog");
-        Log.d("START CLASS", "before initLoader");
-        getSupportLoaderManager().restartLoader(0, argsBundle, this);
+    // Check if either address or lat/long is set. Return
+    private boolean bathPositionSet() {
+        String address = bathingSiteForm.getPositionDataAsHttpGet();
+        //String[] latLong = bathingSiteForm.getLatLong();
+        if(address != null) {
+            weatherUrl = weatherUrl.concat(address);
+            weatherUrl = sanitizeWebAddress(weatherUrl);
+            return true;
+        }
+        return false;
+    }
+
+    private String sanitizeWebAddress(String url) {
+        url = url.replace('å', 'a');
+        url = url.replace('Å', 'A');
+        url = url.replace('ä', 'a');
+        url = url.replace('Ä', 'A');
+        url = url.replace('ö', 'o');
+        url = url.replace('Ö', 'O');
+        Log.d("EDITED URL", url);
+        return url;
     }
 
     public void startSettingsActivity (MenuItem menuItem) {
@@ -111,20 +136,22 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         if(getWeatherDialog != null) {
             getWeatherDialog.dismiss();
         }
+        if(data == null) {
+            bathingSiteForm.SetErrorPosDoesNotExist();
+        }
+        else {
+            String description = data.get(0);
+            String temp = data.get(1);
+            String base64Image = data.get(2);
 
-        String description = data.get(0);
-        String temp = data.get(1);
-        String base64Image = data.get(2);
-
-        //showWeatherDialog
-        ShowWeatherDialog showWeatherDialog = ShowWeatherDialog.newInstance(description, temp, base64Image);
-        showWeatherDialog.show(getSupportFragmentManager(), "showWeatherDialog");
+            //showWeatherDialog
+            ShowWeatherDialog showWeatherDialog = ShowWeatherDialog.newInstance(description, temp, base64Image);
+            showWeatherDialog.show(getSupportFragmentManager(), "showWeatherDialog");
+        }
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
     }
-
-
 }

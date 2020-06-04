@@ -45,9 +45,9 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         setSupportActionBar(toolbar);
 
         // For rotating
-        if(getSupportLoaderManager().getLoader(0) != null) {
+        /*if(getSupportLoaderManager().getLoader(0) != null) {
             getSupportLoaderManager().initLoader(0, null, this);
-        }
+        }*/
 
         // Set up actionbar
         ActionBar ac = getSupportActionBar();
@@ -166,17 +166,19 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         // Set image
         ImageView image = weatherView.findViewById(R.id.current_weather_image);
         image.setImageDrawable(weatherImage);
-        */
+        */ // TODO: Remove
         String description = data.get(0);
         String temp = data.get(1);
+        String base64Image = data.get(2);
 
+        /*
         byte[] byteString = Base64.decode(data.get(2), Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(byteString, 0, byteString.length);
         Drawable weatherImage = new BitmapDrawable(getResources(), decodedByte);
+        */
 
-
-
-        showWeatherDialog = new ShowWeatherDialog(description, temp, weatherImage);
+        //showWeatherDialog
+        showWeatherDialog = ShowWeatherDialog.newInstance(description, temp, base64Image);
         showWeatherDialog.show(getSupportFragmentManager(), "showWeatherDialog");
         // Set view and create dialog
         /*AlertDialog.Builder builder = new AlertDialog.Builder(this);

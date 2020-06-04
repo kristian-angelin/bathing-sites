@@ -2,6 +2,9 @@ package se.miun.kran1800.dt031g.bathingsites;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,26 +27,28 @@ public class ShowWeatherDialog extends DialogFragment {
 
     private String descriptionText;
     private String tempText;
-    private Drawable drawable;
+    private String base64Image;
 
-    private TextView description;
-    private TextView temp;
-    private ImageView image;
+    // Call the dialog with newInstance().
+    public static ShowWeatherDialog newInstance(String description, String temp, String base64Image) {
+        ShowWeatherDialog fragment = new ShowWeatherDialog();
+        Bundle args = new Bundle();
+        args.putString("description", description);
+        args.putString("temp", temp);
+        args.putString("base64Image", base64Image);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public ShowWeatherDialog() {}
-
-    public ShowWeatherDialog(String description, String temp, Drawable drawable) {
-        this.descriptionText = description;
-        this.tempText = temp;
-        this.drawable = drawable;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setCancelable(false);
+        descriptionText = getArguments().getString("description");
+        tempText = getArguments().getString("temp");
+        base64Image = getArguments().getString("base64Image");
     }
 
     @NonNull
@@ -53,13 +59,18 @@ public class ShowWeatherDialog extends DialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_show_weather_dialog, null);
 
-        description = view.findViewById(R.id.current_weather_description);
-        temp = view.findViewById(R.id.current_weather_temp);
-        image = view.findViewById(R.id.current_weather_image);
+        // Convert base64 string to drawable
+        byte[] byteString = Base64.decode(base64Image, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(byteString, 0, byteString.length);
+        Drawable weatherImage = new BitmapDrawable(getResources(), decodedByte);
+
+        TextView description = view.findViewById(R.id.current_weather_description);
+        TextView temp = view.findViewById(R.id.current_weather_temp);
+        ImageView image = view.findViewById(R.id.current_weather_image);
 
         description.setText(descriptionText);
         temp.setText(tempText);
-        image.setImageDrawable(drawable);
+        image.setImageDrawable(weatherImage);
 
         builder.setView(view)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {

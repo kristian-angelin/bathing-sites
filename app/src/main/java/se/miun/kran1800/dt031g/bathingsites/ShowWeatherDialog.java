@@ -19,10 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ShowWeatherDialog extends DialogFragment {
 
     private String descriptionText;
@@ -47,7 +43,8 @@ public class ShowWeatherDialog extends DialogFragment {
     {
         super.onCreate(savedInstanceState);
         descriptionText = getArguments().getString("description");
-        tempText = getArguments().getString("temp");
+        // Set temp and add degree sign.
+        tempText = getArguments().getString("temp") + getString(R.string.degree_sign);
         base64Image = getArguments().getString("base64Image");
     }
 
@@ -64,6 +61,7 @@ public class ShowWeatherDialog extends DialogFragment {
         Bitmap decodedByte = BitmapFactory.decodeByteArray(byteString, 0, byteString.length);
         Drawable weatherImage = new BitmapDrawable(getResources(), decodedByte);
 
+        // Get all items in view to and set the values.
         TextView description = view.findViewById(R.id.current_weather_description);
         TextView temp = view.findViewById(R.id.current_weather_temp);
         ImageView image = view.findViewById(R.id.current_weather_image);
@@ -72,13 +70,14 @@ public class ShowWeatherDialog extends DialogFragment {
         temp.setText(tempText);
         image.setImageDrawable(weatherImage);
 
+        // Add view and a button to builder
         builder.setView(view)
                 .setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dismiss();
                     }
                 });
-        // Create the AlertDialog object and return it
+        // Create the AlertDialog and return it.
         return builder.create();
     }
 }

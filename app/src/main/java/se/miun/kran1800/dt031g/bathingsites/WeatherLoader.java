@@ -1,11 +1,7 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.renderscript.ScriptGroup;
 import android.util.Base64;
-import android.util.Base64InputStream;
-import android.util.Base64OutputStream;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -38,9 +34,6 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
         super(context);
         this.weatherDataUrl = weatherDataUrl;
         this.imageUrl = imageUrl;
-        Log.d("LOADER CLASS", "constructor()");
-        Log.d("DATA URL", weatherDataUrl);
-        Log.d("IMG URL", imageUrl);
     }
 
     @Override
@@ -52,8 +45,6 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
     @Nullable
     @Override
     public List<String> loadInBackground() {
-        //boolean downloadSuccess = downloadForecast(weatherDataUrl);
-        Log.d("LOADER CLASS", "loadInBackground()");
         // If we can get weather data, get the image.
         if (downloadForecast(weatherDataUrl)) {
             downloadWeatherImage(imageUrl);
@@ -105,11 +96,11 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
             weatherData.add(weatherObj.getString("description"));
 
             imageName = weatherObj.getString("icon") + ".png";
-            // Parse temp
+            // Parse temp and cast to int to remove decimals.
             JSONObject mainObj = jsonWeatherObject.getJSONObject("main");
-            double weatherTemp = mainObj.getDouble("temp");
+            int weatherTemp = (int) mainObj.getDouble("temp");
             // Add temp to result list.
-            weatherData.add(Double.toString(weatherTemp));
+            weatherData.add(Integer.toString(weatherTemp));
 
         } catch (JSONException e) {
             e.printStackTrace();

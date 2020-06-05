@@ -5,6 +5,9 @@
     <string name="bathing_sites">bathing sites</string>
     <string name="bath_img_description">bathing sign</string>
     <string name="title_activity_new_bathing_site">New Bathing Site</string>
+    <!-- Show random bathing site dialog -->
+    <string name="title_show_bathing_site">Bathing site</string>
+    <string name="error_no_bathing_sites">No bathing sites saved!</string>
 
     <!-- Universal menu strings -->
     <string name="menu_settings">Settings</string>

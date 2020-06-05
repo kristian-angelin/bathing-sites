@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.AsyncTaskLoader;
@@ -262,7 +263,8 @@ public class NewBathingSiteActivityFragment extends Fragment
         if(entrySuccess) {
             Toast.makeText(getContext(), getString(R.string.database_save_success), Toast.LENGTH_LONG).show();
             clearForm();
-            getActivity().finish();
+            // Navigate to main activity.
+            NavUtils.navigateUpFromSameTask(getActivity());
         } else {
             Toast.makeText(getContext(), getString(R.string.database_save_failed), Toast.LENGTH_LONG).show();
         }

@@ -2,6 +2,7 @@ package se.miun.kran1800.dt031g.bathingsites;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,11 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -23,7 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class NewBathingSiteActivityFragment extends Fragment implements DatePickerDialog.OnDateSetListener {
+public class NewBathingSiteActivityFragment extends Fragment
+        implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Boolean> {
 
     private TextInputEditText nameField;
     private TextInputEditText descField;
@@ -95,17 +101,34 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
 
     // Save bathing site by showing a toast.
     public void saveBatingSite() {
-        if(validFormEntries()) {
-            String toastMsg = "Name: " + nameField.getText().toString() + "\n"
-                            + "Description: " + descField.getText().toString() + "\n"
-                            + "Address: " + addressField.getText().toString() + "\n"
-                            + "Latitude: " + latField.getText().toString() + "\n"
-                            + "Longitude: " + longField.getText().toString() + "\n"
-                            + "Grade: " + gradeBar.getRating() + "\n"
-                            + "water temp: " + tempField.getText().toString() + "\n"
-                            + "Date for temp: " + dateField.getText().toString() + "\n";
-            Toast.makeText(getContext(), toastMsg, Toast.LENGTH_LONG).show();
+        if(validFormEntries()) { // TODO: Do this in NewBathingActivity instead. Just fetch BathingSite object.
+
+            // Get all variables.
+            String name = nameField.getText().toString();
+            String description = descField.getText().toString();
+            String address = addressField.getText().toString();
+            Double latitude = getDoubleFromText(latField);
+            Double longitude = getDoubleFromText(longField);
+            float grade = gradeBar.getRating(); // TODO: Change to double
+            Double waterTemp = getDoubleFromText(tempField);
+            String dateForTemp = dateField.getText().toString();
+
+            // Create a bathingSite and put in bundle to send to SaveToDatabaseTask
+            BathingSite bathingSite = new BathingSite(0, name, description, address,
+                    latitude, longitude, grade, waterTemp, dateForTemp);
+            Bundle argsBundle = new Bundle();
+            argsBundle.putSerializable("bathing_site", bathingSite);
+            getLoaderManager().restartLoader(0, argsBundle, this);
+
         }
+    }
+
+    private double getDoubleFromText(TextInputEditText textField) {
+        double value = 0;
+        if(!textField.getText().toString().trim().isEmpty()) {
+            value = Double.parseDouble(textField.getText().toString());
+        }
+        return value;
     }
 
     // Validate form and display error messages.
@@ -225,4 +248,26 @@ public class NewBathingSiteActivityFragment extends Fragment implements DatePick
         latField.setError(getString(R.string.error_invalid_position));
         longField.setError(getString(R.string.error_invalid_position));
     }
+
+    @NonNull
+    @Override
+    public Loader<Boolean> onCreateLoader(int id, @Nullable Bundle args) {
+        Log.d("SaveToDatabase", "Inside onCreateLoader");
+        BathingSite bathingSite = (BathingSite) args.getSerializable("bathing_site");
+        return new SaveToDatabaseTask(getContext(), bathingSite);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean entrySuccess) {
+        if(entrySuccess) {
+            Toast.makeText(getContext(), getString(R.string.database_save_success), Toast.LENGTH_LONG).show();
+            clearForm();
+            getActivity().finish();
+        } else {
+            Toast.makeText(getContext(), getString(R.string.database_save_failed), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {}
 }

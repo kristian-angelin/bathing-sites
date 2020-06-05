@@ -7,8 +7,12 @@ import androidx.room.Query;
 @Dao
 public interface BathingSiteDao {
     @Insert
-    public void insertPhoneCall(BathingSite bathingSite);
+    public void insertBathingSite(BathingSite bathingSite);
 
-    @Query("SELECT * FROM bathing_site")
-    public BathingSite[] getBathingSites();
+    @Query("SELECT COUNT(:id) FROM bathing_site")
+    public int getTotalBathingSites(int id);
+
+    @Query("SELECT COUNT(*) FROM bathing_site WHERE latitude = :lat AND longitude = :lon")
+    public int checkForDuplicate(double lat, double lon);
+
 }

@@ -25,6 +25,10 @@
     <string name="error_invalid_long">Range -180 to 180!</string>
     <string name="error_invalid_position">Can\'t find position</string>
 
+    <!-- Toast messages when saving bath site to database -->
+    <string name="database_save_success">Bath site saved!</string>
+    <string name="database_save_failed">Error: Location already saved!</string>
+
     <!-- New bathing site menu strings -->
     <string name="menu_clear">Clear</string>
     <string name="menu_save">Save</string>

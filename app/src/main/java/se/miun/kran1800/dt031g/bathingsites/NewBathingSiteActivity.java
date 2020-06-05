@@ -79,7 +79,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
 
     public void getCurrentWeather(MenuItem item) {
         SharedPreferences sharedPreferences =  this.getPreferences(Context.MODE_PRIVATE);
-        // TODO: REMOVE DEBUG CODE STOCKHOLM
+
         weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url));
         String imageUrl = getString(R.string.default_weather_icon_url);
         // Check if position is set before getting weather
@@ -101,13 +101,13 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         //String[] latLong = bathingSiteForm.getLatLong();
         if(address != null) {
             weatherUrl = weatherUrl.concat(address);
-            weatherUrl = sanitizeWebAddress(weatherUrl);
+            weatherUrl = sanitizeWebUrl(weatherUrl);
             return true;
         }
         return false;
     }
 
-    private String sanitizeWebAddress(String url) {
+    private String sanitizeWebUrl(String url) {
         url = url.replace('å', 'a');
         url = url.replace('Å', 'A');
         url = url.replace('ä', 'a');

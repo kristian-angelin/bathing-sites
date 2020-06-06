@@ -1,6 +1,8 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -14,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
+
+// TODO: Go through and check if any public things can be set private instead.
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -43,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void startSettingsActivity (MenuItem menuItem) {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void startDownloadActivity (MenuItem menuItem) {
+        Intent intent = new Intent(this, DownloadActivity.class);
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        String url = sharedPreferences.getString("download_bathing_sites_url", getString(R.string.default_download_url));
+        intent.putExtra("url", url);
         startActivity(intent);
     }
 }

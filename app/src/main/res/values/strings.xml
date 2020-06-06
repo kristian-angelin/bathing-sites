@@ -52,6 +52,7 @@
     <!-- Preference Titles -->
     <string name="weather_header">Weather</string>
     <string name="download_header">Download</string>
+    <string name="map_header">Map</string>
     <!-- Weather Preferences -->
     <string name="weather_title">Weather data URL</string>
     <string name="default_weather_url">https://dt031g.programvaruteknik.nu/bathingsites/weather.php</string>
@@ -59,6 +60,8 @@
     <!-- Download Preferences-->
     <string name="download_title">Download bathing sites URL</string>
     <string name="default_download_url">https://dt031g.programvaruteknik.nu/bathingsites/download/</string>
+    <!-- Map Preferences -->
+    <string name="map_title">Max distance to show bathing sites</string>
 
     <!-- Unicode strings -->
     <string name="degree_sign">\u00B0</string>

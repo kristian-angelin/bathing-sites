@@ -21,4 +21,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/map_header">
+
+        <SeekBarPreference
+            app:key="map_distance_to_show_sites"
+            app:title="@string/map_title"
+            app:useSimpleSummaryProvider="true"
+            app:showSeekBarValue="true"
+            android:defaultValue="@integer/default_map_distance"
+            android:max="@integer/max_map_distance" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

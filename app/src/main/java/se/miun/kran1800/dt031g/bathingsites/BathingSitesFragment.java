@@ -13,29 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+// Fragment holding BathingSiteView.
+// Handles the creation of dialog showing random bathing site from database.
 public class BathingSitesFragment extends Fragment implements LoaderManager.LoaderCallbacks<BathingSite> {
-    /*// TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
-    // TODO: Rename and change types and number of parameters
-    public static BathingSitesFragment newInstance(String param1, String param2) {
-        BathingSitesFragment fragment = new BathingSitesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-    public BathingSitesFragment() {
-        // Required empty public constructor
-    }
+    public BathingSitesFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,11 +43,12 @@ public class BathingSitesFragment extends Fragment implements LoaderManager.Load
         });
     }
 
+    // Show random bathing site dialog by calling AsyncTaskLoader
     private void showRandomBathingSite() {
         getLoaderManager().restartLoader(1, null, this);
     }
 
-
+    //--------------- LoaderCallbacks required methods ---------------------
     @NonNull
     @Override
     public Loader<BathingSite> onCreateLoader(int id, @Nullable Bundle args) {

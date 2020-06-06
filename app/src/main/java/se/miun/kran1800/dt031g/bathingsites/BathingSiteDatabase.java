@@ -10,10 +10,10 @@ import androidx.room.RoomDatabase;
 @Database(entities = {BathingSite.class}, version = 1, exportSchema = false)
 public abstract class BathingSiteDatabase extends RoomDatabase {
 
-    private static BathingSiteDatabase databaseInstance;
+    private static BathingSiteDatabase databaseInstance; // Instance
+    public abstract BathingSiteDao bathingSiteDao(); // Dao
 
-    public abstract BathingSiteDao bathingSiteDao();
-
+    // Get the instance of database
     static BathingSiteDatabase getInstance(Context context) {
         if(databaseInstance == null) {
             databaseInstance = Room.databaseBuilder

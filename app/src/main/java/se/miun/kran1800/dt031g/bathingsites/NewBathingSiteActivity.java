@@ -13,7 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -90,7 +89,6 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
 
             getWeatherDialog = GetWeatherDialog.newInstance();
             getWeatherDialog.show(getSupportFragmentManager(), "getWeatherDialog");
-            Log.d("START CLASS", "before initLoader");
             getSupportLoaderManager().restartLoader(0, argsBundle, this);
         }
     }
@@ -98,7 +96,6 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     // Check if either address or lat/long is set. Return
     private boolean bathPositionSet() {
         String address = bathingSiteForm.getPositionDataAsHttpGet();
-        //String[] latLong = bathingSiteForm.getLatLong();
         if(address != null) {
             weatherUrl = weatherUrl.concat(address);
             weatherUrl = sanitizeWebUrl(weatherUrl);
@@ -115,7 +112,6 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         url = url.replace('ö', 'o');
         url = url.replace('Ö', 'O');
         url = url.replaceAll(" ", "");
-        Log.d("EDITED URL", url);
         return url;
     }
 
@@ -127,7 +123,6 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     @NonNull
     @Override
     public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.d("START CLASS", "onCreateLoader()");
         return new LoadWeatherTask(this, args.getString("weatherUrl"), args.getString("imageUrl"));
     }
 
@@ -152,7 +147,5 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<List<String>> loader) {
-
-    }
+    public void onLoaderReset(@NonNull Loader<List<String>> loader) {}
 }

@@ -57,4 +57,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("url", url);
         startActivity(intent);
     }
+
+    public void startMapActivity (MenuItem menuItem) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
 }

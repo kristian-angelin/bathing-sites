@@ -22,7 +22,7 @@ import java.util.List;
 public class NewBathingSiteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<String>> {
 
     private NewBathingSiteActivityFragment bathingSiteForm;
-    private GetWeatherDialog getWeatherDialog;
+    private DownloadingDialog downloadingDialog;
     private String weatherUrl;
 
     @Override
@@ -87,8 +87,8 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
             argsBundle.putString("weatherUrl", weatherUrl);
             argsBundle.putString("imageUrl", imageUrl);
 
-            getWeatherDialog = GetWeatherDialog.newInstance();
-            getWeatherDialog.show(getSupportFragmentManager(), "getWeatherDialog");
+            downloadingDialog = DownloadingDialog.newInstance(getString(R.string.downloading_weather_message));
+            downloadingDialog.show(getSupportFragmentManager(), "downloadWeatherDialog");
             getSupportLoaderManager().restartLoader(0, argsBundle, this);
         }
     }
@@ -129,8 +129,8 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     // Will return info about weather as String[0 = description; 1 = temp; 2 = png as Base64]
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
-        if(getWeatherDialog != null) {
-            getWeatherDialog.dismiss();
+        if(downloadingDialog != null) {
+            downloadingDialog.dismiss();
         }
         if(data == null) {
             bathingSiteForm.SetErrorPosDoesNotExist();

@@ -21,7 +21,7 @@ public class LoadRandomBathingSiteTask extends AsyncTaskLoader<BathingSite> {
     @Nullable
     @Override
     public BathingSite loadInBackground() {
-        BathingSiteDatabase database = BathingSiteDatabase.getDatabase(getContext());
+        BathingSiteDatabase database = BathingSiteDatabase.getInstance(getContext());
         return database.bathingSiteDao().getRandomBathingSite();
     }
 }

@@ -26,7 +26,7 @@ public class SaveToDatabaseTask extends AsyncTaskLoader<Boolean> {
     @Nullable
     @Override
     public Boolean loadInBackground() {
-        BathingSiteDatabase database = BathingSiteDatabase.getDatabase(getContext());
+        BathingSiteDatabase database = BathingSiteDatabase.getInstance(getContext());
         // TODO: Make a better use then 1
         // Check if lat/lon are 0, use this value as NULL. (Its the location of NULL ISLAND in the ocean).
         if(bathingSite.latitude != 0 && bathingSite.longitude != 0) {

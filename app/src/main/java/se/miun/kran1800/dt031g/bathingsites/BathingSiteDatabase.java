@@ -14,7 +14,7 @@ public abstract class BathingSiteDatabase extends RoomDatabase {
 
     public abstract BathingSiteDao bathingSiteDao();
 
-    static BathingSiteDatabase getDatabase(Context context) {
+    static BathingSiteDatabase getInstance(Context context) {
         if(databaseInstance == null) {
             databaseInstance = Room.databaseBuilder
                     (context, BathingSiteDatabase.class, "bathing_site_database").build();

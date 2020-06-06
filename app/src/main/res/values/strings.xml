@@ -13,6 +13,9 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_download">Download</string>
 
+    <!-- Downloading new bathing sites dialog -->
+    <string name="downloading_bathing_site_message">Downloading and saving new sites…</string>
+
     <!-- New bathing site form field strings -->
     <string name="form_name">Name</string>
     <string name="form_description">Description</string>
@@ -41,7 +44,7 @@
 
     <!-- New bathing site dialog strings -->
     <string name="title_current_weather">Current weather</string>
-    <string name="getting_weather">Getting current weather…</string>
+    <string name="downloading_weather_message">Fetching current weather…</string>
     <string name="description_weather_image">Current weather</string>
     <string name="button_ok">OK</string>
 

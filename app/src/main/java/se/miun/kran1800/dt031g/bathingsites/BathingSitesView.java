@@ -33,7 +33,7 @@ public class BathingSitesView extends ConstraintLayout {
         // Load attributes
         activity = (Activity) getContext();
         inflate(context, R.layout.view_bathing_sites, this);
-        database = BathingSiteDatabase.getDatabase(getContext());
+        database = BathingSiteDatabase.getInstance(getContext());
         displaySitesCount();
         updateBathCount();
     }

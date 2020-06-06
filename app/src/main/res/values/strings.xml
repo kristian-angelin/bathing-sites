@@ -12,6 +12,7 @@
     <!-- Universal menu strings -->
     <string name="menu_settings">Settings</string>
     <string name="menu_download">Download</string>
+    <string name="menu_map">Map</string>
 
     <!-- Downloading new bathing sites dialog -->
     <string name="downloading_bathing_site_message">Downloading and saving new sites…</string>
@@ -65,6 +66,7 @@
 
     <!-- Unicode strings -->
     <string name="degree_sign">\u00B0</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

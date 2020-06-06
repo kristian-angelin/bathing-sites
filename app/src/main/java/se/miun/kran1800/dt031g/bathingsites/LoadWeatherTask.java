@@ -24,7 +24,7 @@ import java.util.List;
 // TODO: Check if streams need to be closed.
 // TODO: Check if we should use if instead of catching wrong data.
 
-public class WeatherLoader extends AsyncTaskLoader<List<String>> {
+public class LoadWeatherTask extends AsyncTaskLoader<List<String>> {
 
     // Urls for getting weather data.
     private String weatherDataUrl;
@@ -33,7 +33,7 @@ public class WeatherLoader extends AsyncTaskLoader<List<String>> {
     private List<String> weatherData = new ArrayList<>();
     private String imageName;
 
-    public WeatherLoader(@NonNull Context context, String weatherDataUrl, String imageUrl) {
+    public LoadWeatherTask(@NonNull Context context, String weatherDataUrl, String imageUrl) {
         super(context);
         this.weatherDataUrl = weatherDataUrl;
         this.imageUrl = imageUrl;

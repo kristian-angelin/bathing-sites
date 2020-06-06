@@ -128,7 +128,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     @Override
     public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
         Log.d("START CLASS", "onCreateLoader()");
-        return new WeatherLoader(this, args.getString("weatherUrl"), args.getString("imageUrl"));
+        return new LoadWeatherTask(this, args.getString("weatherUrl"), args.getString("imageUrl"));
     }
 
     // Will return info about weather as String[0 = description; 1 = temp; 2 = png as Base64]

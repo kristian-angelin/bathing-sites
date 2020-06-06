@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/weather_header">
 
@@ -7,6 +8,16 @@
             app:title="@string/weather_title"
             app:useSimpleSummaryProvider="true"
             app:defaultValue="@string/default_weather_url"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/download_header">
+
+        <EditTextPreference
+            app:key="download_bathing_sites_url"
+            app:title="@string/download_title"
+            app:useSimpleSummaryProvider="true"
+            app:defaultValue="@string/default_download_url"/>
 
     </PreferenceCategory>
 

@@ -2,6 +2,7 @@ package se.miun.kran1800.dt031g.bathingsites;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import android.Manifest;
 import android.content.Context;
@@ -21,6 +22,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -42,7 +44,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private BathingSite[] bathingSites;
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
     private int VIEW_RADIUS;
-
+    boolean SITES_LOADED = false;
+    private Location currentLocation = null;
     private Circle circle;
 
     @Override
@@ -53,7 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        currentLocation = new Location("");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
@@ -65,14 +68,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
-
-    private void startLocationUpdates() {
-        fusedLocationClient.requestLocationUpdates(locationRequest,
-                locationCallback,
-                Looper.getMainLooper());
-    }
-
-
 
     /**
      * Manipulates the map once available.
@@ -87,14 +82,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMyLocationEnabled(true);
-        getMarkersFromDatabase();
 
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Get radius from preferences times 1000 to convert to km.
         VIEW_RADIUS = sharedPreferences.getInt(
                 "map_distance_to_show_sites",
                 getResources().getInteger(R.integer.default_map_distance)) * 1000;
-
         // Create the circle with tempPos.
         circle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(0,0))
@@ -108,10 +101,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         new LoadSiteMarkers().execute();
     }
 
-    private void getMarkersFromDatabase () {
-
+    // Start receiving updates.
+    private void startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+                locationCallback,
+                Looper.getMainLooper());
     }
 
+    // Callback setup for location changes.
     private void setupLocationCallback() {
         locationCallback = new LocationCallback() {
             @Override
@@ -120,21 +117,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    circle.setCenter(new LatLng(location.getLatitude(), location.getLongitude()));
-                    if(!circle.isVisible()) {
-                        circle.setVisible(true);
+                    if(location.getLatitude() != currentLocation.getLatitude() &&
+                        location.getLongitude() != currentLocation.getLongitude()) {
+                        currentLocation = location;
+                        circle.setCenter(new LatLng(location.getLatitude(), location.getLongitude()));
+                        updateMarkers(location);
+                        if(!circle.isVisible()) {
+                            circle.setVisible(true);
+                        }
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(
+                                new LatLng(location.getLatitude(), location.getLongitude())));
                     }
-                    // Loop through all markers and show those within
-                    for(Marker marker : markerArray) {
-                        Location markerLocation = new Location("");
-                        markerLocation.setLatitude(marker.getPosition().latitude);
-                        markerLocation.setLongitude(marker.getPosition().longitude);
-                        if(location.distanceTo(markerLocation) < VIEW_RADIUS) {
-                            marker.setVisible(true);
-                        }
-                        else {
-                            marker.setVisible(false);
-                        }
+                    // Only called once after sites are loaded to update markers and set camera.
+                    // Will zoom camera when starting map activity.
+                    if(SITES_LOADED) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                                new LatLng(location.getLatitude(), location.getLongitude()), 10));
+                        updateMarkers(location);
+                        SITES_LOADED = false;
+                    }
+                }
+            }
+            // Loop through all markers and make visible depending on distance to location.
+            private void updateMarkers(Location location) {
+                for(Marker marker : markerArray) {
+                    Location markerLocation = new Location("");
+                    markerLocation.setLatitude(marker.getPosition().latitude);
+                    markerLocation.setLongitude(marker.getPosition().longitude);
+                    if(location.distanceTo(markerLocation) < VIEW_RADIUS) {
+                        marker.setVisible(true);
+                    }
+                    else {
+                        marker.setVisible(false);
                     }
                 }
             }
@@ -194,18 +208,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for(BathingSite site : bathingSites) {
                 // Create marker
                 Marker marker = mMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(site.latitude, site.longitude))
-                                    .visible(false)
-                                    .title(site.name)
-                                    .snippet(getString(R.string.form_description) + ": " + site.description + "\n" +
-                                            getString(R.string.form_address) + ": " + site.address + "\n" +
-                                            getString(R.string.form_latitude) + ": " + site.latitude + "\n" +
-                                            getString(R.string.form_longitude) + ": " + site.longitude + "\n" +
-                                            getString(R.string.form_grade) + ": " + site.grade + "\n" +
-                                            getString(R.string.form_water_temp) + ": " + site.waterTemp + "\n" +
-                                            getString(R.string.form_date_for_temp) + ": " + site.dateForTemp));
+                        .position(new LatLng(site.latitude, site.longitude))
+                        .visible(false)
+                        .title(site.name)
+                        .snippet(getString(R.string.form_description) + ": " + site.description + "\n" +
+                                getString(R.string.form_address) + ": " + site.address + "\n" +
+                                getString(R.string.form_latitude) + ": " + site.latitude + "\n" +
+                                getString(R.string.form_longitude) + ": " + site.longitude + "\n" +
+                                getString(R.string.form_grade) + ": " + site.grade + "\n" +
+                                getString(R.string.form_water_temp) + ": " + site.waterTemp + "\n" +
+                                getString(R.string.form_date_for_temp) + ": " + site.dateForTemp));
                 markerArray.add(marker);
             }
+            SITES_LOADED = true;
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
+import androidx.preference.PreferenceManager;
 
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,7 +78,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     }
 
     public void getCurrentWeather(MenuItem item) {
-        SharedPreferences sharedPreferences =  this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
 
         weatherUrl = sharedPreferences.getString("weather_url", getString(R.string.default_weather_url));
         String imageUrl = getString(R.string.default_weather_icon_url);

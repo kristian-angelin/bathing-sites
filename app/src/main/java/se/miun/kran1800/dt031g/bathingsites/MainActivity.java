@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import android.util.Log;
 import android.view.MenuInflater;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startDownloadActivity (MenuItem menuItem) {
         Intent intent = new Intent(this, DownloadActivity.class);
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String url = sharedPreferences.getString("download_bathing_sites_url", getString(R.string.default_download_url));
         intent.putExtra("url", url);
         startActivity(intent);

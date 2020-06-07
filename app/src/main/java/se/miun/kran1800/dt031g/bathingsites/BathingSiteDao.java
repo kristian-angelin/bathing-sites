@@ -22,4 +22,8 @@ public interface BathingSiteDao {
     // Return a random bathing site.
     @Query("SELECT * FROM bathing_site ORDER BY RANDOM() LIMIT 1")
     BathingSite getRandomBathingSite();
+
+    // Return array of all bathing sites.
+    @Query("SELECT * FROM bathing_site")
+    BathingSite[] getAllBathingsSites();
 }

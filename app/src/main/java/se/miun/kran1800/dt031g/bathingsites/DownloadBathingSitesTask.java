@@ -96,8 +96,8 @@ public class DownloadBathingSitesTask extends AsyncTaskLoader<Boolean> {
                                         .replaceAll("\\p{C}", "")
                                         .trim();
                 }
-                double latitude = Double.parseDouble(dataString[0]);
-                double longitude = Double.parseDouble(dataString[1]);
+                double longitude = Double.parseDouble(dataString[0]);
+                double latitude = Double.parseDouble(dataString[1]);
                 String name = dataString[2];
                 String address = "";
                 // If address has been included

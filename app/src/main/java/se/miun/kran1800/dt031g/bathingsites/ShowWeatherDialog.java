@@ -11,7 +11,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -19,6 +18,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Dialog for showing weather by loading text and image in string format (base64).
+ */
 public class ShowWeatherDialog extends DialogFragment {
 
     private String descriptionText;

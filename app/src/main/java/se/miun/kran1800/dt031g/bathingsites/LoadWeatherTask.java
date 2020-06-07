@@ -21,9 +21,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Check if streams need to be closed.
-// TODO: Check if we should use if instead of catching wrong data.
-
+/**
+ * AsyncTaskLoader for loading weather data from two URLs.
+ */
 public class LoadWeatherTask extends AsyncTaskLoader<List<String>> {
 
     // Urls for getting weather data.
@@ -48,14 +48,16 @@ public class LoadWeatherTask extends AsyncTaskLoader<List<String>> {
     @Nullable
     @Override
     public List<String> loadInBackground() {
+        if()
         // If we can get weather data, get the image.
-        if (downloadForecast(weatherDataUrl)) {
+        if (downloadWeatherData(weatherDataUrl)) {
             downloadWeatherImage(imageUrl);
         }
         return weatherData;
     }
 
-    private boolean downloadForecast(String weatherUrl) {
+    // Download current weather from URL and return true if successful.
+    private boolean downloadWeatherData(String weatherUrl) {
         boolean result = false;
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
@@ -115,7 +117,7 @@ public class LoadWeatherTask extends AsyncTaskLoader<List<String>> {
         }
     }
 
-    // Download weather image.
+    // Download weather image from URL.
     private void downloadWeatherImage(String imageUrl) {
         try {
             // File name to end of URL String.

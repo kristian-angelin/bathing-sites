@@ -6,14 +6,16 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-// Bathing site database instance
+/**
+ * Bathing site database singleton.
+ */
 @Database(entities = {BathingSite.class}, version = 1, exportSchema = false)
 public abstract class BathingSiteDatabase extends RoomDatabase {
 
-    private static BathingSiteDatabase databaseInstance; // Instance
-    public abstract BathingSiteDao bathingSiteDao(); // Dao
+    private static BathingSiteDatabase databaseInstance;    // Instance
+    public abstract BathingSiteDao bathingSiteDao();        // Dao
 
-    // Get the instance of database
+    // Return instance of database
     static BathingSiteDatabase getInstance(Context context) {
         if(databaseInstance == null) {
             databaseInstance = Room.databaseBuilder

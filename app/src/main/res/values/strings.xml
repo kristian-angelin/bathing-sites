@@ -55,6 +55,9 @@
     <string name="downloading_weather_message">Fetching current weather…</string>
     <string name="description_weather_image">Current weather</string>
 
+    <!-- Map strings -->
+    <string name="location_permission_not_granted">No permission to use device location!</string>
+
     <!-- Settings strings -->
     <!-- Preference Titles -->
     <string name="weather_header">Weather</string>

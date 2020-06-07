@@ -13,11 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-// Fragment holding BathingSiteView.
-// Handles the creation of dialog showing random bathing site from database.
+/**
+ * Fragment holding BathingSiteView.
+ * Handles the creation of dialog showing random bathing site from database.
+ * Implements LoaderCallbacks to create asyncTaskLoader
+ */
 public class BathingSitesFragment extends Fragment implements LoaderManager.LoaderCallbacks<BathingSite> {
 
-    public BathingSitesFragment() {}
+    public BathingSitesFragment() {}    // Empty constructor
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class BathingSitesFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout
         return inflater.inflate(R.layout.fragment_bathing_sites, container, false);
     }
 
@@ -35,6 +38,7 @@ public class BathingSitesFragment extends Fragment implements LoaderManager.Load
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ImageView image = getView().findViewById(R.id.bath_image);
+        // Add listener for clicks on view.
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,6 +61,7 @@ public class BathingSitesFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(@NonNull Loader<BathingSite> loader, BathingSite bathingSite) {
+        // Create and show instance of dialog
         ShowRandomBathingSiteDialog showRandomBathingSiteDialog = ShowRandomBathingSiteDialog.newInstance(bathingSite);
         showRandomBathingSiteDialog.show(getActivity().getSupportFragmentManager(), "showRandomSite");
     }

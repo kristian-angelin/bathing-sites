@@ -2,13 +2,10 @@ package se.miun.kran1800.dt031g.bathingsites;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -20,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
-import androidx.loader.content.AsyncTaskLoader;
 import androidx.loader.content.Loader;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -29,6 +25,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Fragment for taking user input and saving bath site to database.
+ * Implements LoaderCallbacks to create asyncTaskLoader for saving bath site in separate thread.
+ */
 public class NewBathingSiteActivityFragment extends Fragment
         implements DatePickerDialog.OnDateSetListener, LoaderManager.LoaderCallbacks<Boolean> {
 
@@ -102,7 +102,7 @@ public class NewBathingSiteActivityFragment extends Fragment
 
     // Save bathing site by showing a toast.
     public void saveBatingSite() {
-        if(validFormEntries()) { // TODO: Do this in NewBathingActivity instead. Just fetch BathingSite object.
+        if(validFormEntries()) {
 
             // Get all variables.
             String name = nameField.getText().toString();
@@ -110,7 +110,7 @@ public class NewBathingSiteActivityFragment extends Fragment
             String address = addressField.getText().toString();
             Double latitude = getDoubleFromText(latField);
             Double longitude = getDoubleFromText(longField);
-            float grade = gradeBar.getRating(); // TODO: Change to double
+            float grade = gradeBar.getRating();
             Double waterTemp = getDoubleFromText(tempField);
             String dateForTemp = dateField.getText().toString();
 
@@ -253,7 +253,6 @@ public class NewBathingSiteActivityFragment extends Fragment
     @NonNull
     @Override
     public Loader<Boolean> onCreateLoader(int id, @Nullable Bundle args) {
-        Log.d("SaveToDatabase", "Inside onCreateLoader");
         BathingSite bathingSite = (BathingSite) args.getSerializable("bathing_site");
         return new SaveToDatabaseTask(getContext(), bathingSite);
     }

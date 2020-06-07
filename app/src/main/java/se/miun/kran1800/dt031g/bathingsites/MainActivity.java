@@ -1,7 +1,6 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,26 +17,26 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 
-
-// TODO: Go through and check if any public things can be set private instead.
+/**
+ * Main activity of App
+ */
 public class MainActivity extends AppCompatActivity {
 
     final int ACCESS_LOCATION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("START", "MAIN CREATE");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Create button for starting activity to create a new bathing site.
         FloatingActionButton fab = findViewById(R.id.addBathSiteButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,11 +54,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Start settings activity
     public void startSettingsActivity (MenuItem menuItem) {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
+    // Start download activity
     public void startDownloadActivity (MenuItem menuItem) {
         Intent intent = new Intent(this, DownloadActivity.class);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

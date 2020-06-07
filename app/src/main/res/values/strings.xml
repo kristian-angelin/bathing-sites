@@ -8,6 +8,13 @@
     <!-- Show random bathing site dialog -->
     <string name="title_show_bathing_site">Bathing site</string>
     <string name="error_no_bathing_sites">No bathing sites saved!</string>
+    <!-- Location permission request strings -->
+    <string name="title_permission_required">Permission required</string>
+    <string name="message_location_required">Location permission needed to show bathing sites on the map</string>
+
+    <!-- Dialog button texts -->
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Cancel</string>
 
     <!-- Universal menu strings -->
     <string name="menu_settings">Settings</string>
@@ -47,7 +54,6 @@
     <string name="title_current_weather">Current weather</string>
     <string name="downloading_weather_message">Fetching current weather…</string>
     <string name="description_weather_image">Current weather</string>
-    <string name="button_ok">OK</string>
 
     <!-- Settings strings -->
     <!-- Preference Titles -->

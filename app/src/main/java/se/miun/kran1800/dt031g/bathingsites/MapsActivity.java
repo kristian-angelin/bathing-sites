@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -62,6 +63,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         createLocationRequest();
     }
 
+    // Check permissions since they might change during runtime.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (locationPermissionGranted()) {
+            setupLocationCallback();
+            startLocationUpdates();
+        }
+    }
+
     protected void createLocationRequest() {
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
@@ -71,17 +82,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /**
      * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMyLocationEnabled(true);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         // Get radius from preferences times 1000 to convert to km.
@@ -93,10 +97,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .center(new LatLng(0,0))
                 .radius(VIEW_RADIUS)
                 .strokeColor(Color.RED));
-
-        setupLocationCallback();
-        startLocationUpdates();
-
+        if(locationPermissionGranted()) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            Toast.makeText(this, "No permission to use location", Toast.LENGTH_LONG).show();
+        }
+        // Prepare and load markers from database.
         setupCustomMarker();
         new LoadSiteMarkers().execute();
     }
@@ -118,7 +124,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 for (Location location : locationResult.getLocations()) {
                     if(location.getLatitude() != currentLocation.getLatitude() &&
-                        location.getLongitude() != currentLocation.getLongitude()) {
+                            location.getLongitude() != currentLocation.getLongitude()) {
                         currentLocation = location;
                         circle.setCenter(new LatLng(location.getLatitude(), location.getLongitude()));
                         updateMarkers(location);
@@ -132,7 +138,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // Will zoom camera when starting map activity.
                     if(SITES_LOADED) {
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(location.getLatitude(), location.getLongitude()), 10));
+                                new LatLng(location.getLatitude(), location.getLongitude()),
+                                getResources().getInteger(R.integer.map_camera_start_zoom)));
                         updateMarkers(location);
                         SITES_LOADED = false;
                     }
@@ -144,6 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Location markerLocation = new Location("");
                     markerLocation.setLatitude(marker.getPosition().latitude);
                     markerLocation.setLongitude(marker.getPosition().longitude);
+                    // If inside circle radius, show marker
                     if(location.distanceTo(markerLocation) < VIEW_RADIUS) {
                         marker.setVisible(true);
                     }

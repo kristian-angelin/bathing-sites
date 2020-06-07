@@ -48,7 +48,6 @@ public class LoadWeatherTask extends AsyncTaskLoader<List<String>> {
     @Nullable
     @Override
     public List<String> loadInBackground() {
-        if()
         // If we can get weather data, get the image.
         if (downloadWeatherData(weatherDataUrl)) {
             downloadWeatherImage(imageUrl);

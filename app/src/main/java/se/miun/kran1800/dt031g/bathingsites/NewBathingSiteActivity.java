@@ -143,7 +143,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         if(downloadingDialog != null) {
             downloadingDialog.dismiss();
         }
-        if(data == null) {
+        if(data.isEmpty()) {
             bathingSiteForm.SetErrorPosDoesNotExist();
         }
         else {

@@ -1,7 +1,6 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.Log;
 import android.webkit.URLUtil;
 
@@ -20,6 +19,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * AsyncTaskLoader for downloading and saving bathing sites from a URL.
+ */
 public class DownloadBathingSitesTask extends AsyncTaskLoader<Boolean> {
 
     private String downloadUrl;
@@ -41,6 +43,7 @@ public class DownloadBathingSitesTask extends AsyncTaskLoader<Boolean> {
         return downloadBathingSites();
     }
 
+    // Download bating site
     private boolean downloadBathingSites() {
         File cacheFile = null;
         boolean savedToDatabase = false;
@@ -80,30 +83,34 @@ public class DownloadBathingSitesTask extends AsyncTaskLoader<Boolean> {
         return savedToDatabase;
     }
 
+    // Save bathing sites to database.
     private boolean fileSavedToDatabase(File cacheFile) throws IOException {
         BathingSiteDatabase database = BathingSiteDatabase.getInstance(getContext());
         BufferedReader fileReader = new BufferedReader(new FileReader(cacheFile));
-        boolean savedToDatabase;
+        boolean savedToDatabase = false;
         try{
             String line;
-
+            // Start reading file line by line
             while ((line = fileReader.readLine()) != null) {
-                Log.d("FILE LINE", line);
+                // Split line to separate data.
                 String[] dataString = line.split(",", 0);
+                // Clean up each string
                 for (int i = 0; i < dataString.length; i++) {
                     dataString[i] = dataString[i]
                                         .replace("\"", "")
                                         .replaceAll("\\p{C}", "")
                                         .trim();
                 }
+                // Save all data from line
                 double longitude = Double.parseDouble(dataString[0]);
                 double latitude = Double.parseDouble(dataString[1]);
                 String name = dataString[2];
                 String address = "";
-                // If address has been included
+                // If address was included in file.
                 if(dataString.length > 3) {
                     name = dataString[3];
                 }
+                // Check for duplicate entry before saving.
                 if(database.bathingSiteDao().checkForDuplicate(latitude, longitude) != 1) {
                     BathingSite bathingSite = new BathingSite(0, name, address, latitude, longitude);
                     database.bathingSiteDao().insertBathingSite(bathingSite);

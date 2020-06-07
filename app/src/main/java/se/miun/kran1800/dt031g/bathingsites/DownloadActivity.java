@@ -8,11 +8,14 @@ import androidx.loader.content.Loader;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+/**
+ * Activity for downloading new bathing sites from a web page.
+ * Implements LoaderCallbacks to create asyncTaskLoader for downloading in separate thread.
+ */
 public class DownloadActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Boolean>{
 
     private DownloadingDialog downloadingDialog;
@@ -24,11 +27,13 @@ public class DownloadActivity extends AppCompatActivity implements LoaderManager
         init();
     }
 
+    // Initialize stuff
     private void init() {
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
         WebView webView = findViewById(R.id.web_view);
-        webView.setWebViewClient(new customWebViewClient()); // -custom inner class
+        webView.setWebViewClient(new customWebViewClient()); // Custom inner class
+        // Add listener for download start
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
@@ -38,14 +43,16 @@ public class DownloadActivity extends AppCompatActivity implements LoaderManager
         webView.loadUrl(url);
     }
 
+    // Start download and show download dialog.
     private void downloadBathingSites (String url) {
         Bundle argsBundle = new Bundle();
         argsBundle.putString("url", url);
-        Log.d("URL BEFORE LOADER", url);
         downloadingDialog = DownloadingDialog.newInstance(getString(R.string.downloading_bathing_site_message));
         downloadingDialog.show(getSupportFragmentManager(), "downloadBathingSitesDialog");
         getSupportLoaderManager().restartLoader(0, argsBundle, this);
     }
+
+    //--------------- LoaderCallbacks required methods ---------------------
 
     @NonNull
     @Override

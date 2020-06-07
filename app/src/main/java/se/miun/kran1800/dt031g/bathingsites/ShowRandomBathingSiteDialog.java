@@ -9,12 +9,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-
+/**
+ * Dialog for showing info of a bathing site.
+ */
 public class ShowRandomBathingSiteDialog extends DialogFragment {
 
     private BathingSite bathingSite;
 
-    // on new instance put bathing site in bundle.
+    // On new instance put bathing site in bundle.
     public static ShowRandomBathingSiteDialog newInstance(BathingSite bathingSite) {
         ShowRandomBathingSiteDialog fragment = new ShowRandomBathingSiteDialog();
         Bundle args = new Bundle();
@@ -29,10 +31,6 @@ public class ShowRandomBathingSiteDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bathingSite = (BathingSite) getArguments().getSerializable("bathingSite");
-    }
-
-    public ShowRandomBathingSiteDialog(BathingSite bathingSite) {
-        this.bathingSite = bathingSite;
     }
 
     @NonNull
@@ -59,8 +57,6 @@ public class ShowRandomBathingSiteDialog extends DialogFragment {
                         dismiss();
                     }
                 });
-
-
         return builder.create();
     }
 }

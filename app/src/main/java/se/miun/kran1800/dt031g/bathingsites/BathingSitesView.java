@@ -7,12 +7,14 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-// View keeping track of number of bathing sites stored in database.
+/**
+ * View keeping track of number of bathing sites stored in database.
+ */
 public class BathingSitesView extends ConstraintLayout {
 
-    private int sitesCount = 0; // Default value
-    private BathingSiteDatabase database;
-    private Activity activity;  // Is used to start the UI thread.
+    private int sitesCount = 0;             // Default value
+    private BathingSiteDatabase database;   // Database instance
+    private Activity activity;              // Is used to start the UI thread.
 
     public BathingSitesView(Context context) {
         super(context);
@@ -38,6 +40,7 @@ public class BathingSitesView extends ConstraintLayout {
         updateBathCount();
     }
 
+    // Update text with current bating site count.
     private void displaySitesCount() {
         TextView titleText = findViewById(R.id.bathing_title);
         CharSequence bathText = sitesCount + " " + getResources().getString(R.string.bathing_sites);
@@ -46,10 +49,12 @@ public class BathingSitesView extends ConstraintLayout {
 
     // Creates threads to update bathing sites count from database.
     private void updateBathCount() {
+        // Create thread for database fetch
         new Thread(new Runnable() {
             @Override
             public void run() {
                 sitesCount = database.bathingSiteDao().getTotalBathingSites();
+                // Update on UI thread
                  activity.runOnUiThread(new Runnable(){
                     @Override
                     public void run() {

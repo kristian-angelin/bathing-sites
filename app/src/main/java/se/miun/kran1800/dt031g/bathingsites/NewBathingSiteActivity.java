@@ -1,6 +1,5 @@
 package se.miun.kran1800.dt031g.bathingsites;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +19,12 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+/**
+ * Activity for letting user create a new bathing site.
+ * Has a form for taking input.
+ * Also shows bathing site fragment in landscape mode.
+ * Implements LoaderCallbacks to create asyncTaskLoader for downloading in separate thread.
+ */
 public class NewBathingSiteActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<String>> {
 
     private NewBathingSiteActivityFragment bathingSiteForm;
@@ -88,6 +93,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
             argsBundle.putString("weatherUrl", weatherUrl);
             argsBundle.putString("imageUrl", imageUrl);
 
+            // Create and show download dialog and start download process.
             downloadingDialog = DownloadingDialog.newInstance(getString(R.string.downloading_weather_message));
             downloadingDialog.show(getSupportFragmentManager(), "downloadWeatherDialog");
             getSupportLoaderManager().restartLoader(0, argsBundle, this);
@@ -105,6 +111,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         return false;
     }
 
+    // Cleaning up web address from swedish characters and spaces.
     private String sanitizeWebUrl(String url) {
         url = url.replace('å', 'a');
         url = url.replace('Å', 'A');
@@ -121,6 +128,8 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
         startActivity(intent);
     }
 
+    //--------------- LoaderCallbacks required methods ---------------------
+
     @NonNull
     @Override
     public Loader<List<String>> onCreateLoader(int id, @Nullable Bundle args) {
@@ -130,6 +139,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
     // Will return info about weather as String[0 = description; 1 = temp; 2 = png as Base64]
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> data) {
+        // If download dialog exist, dismiss it.
         if(downloadingDialog != null) {
             downloadingDialog.dismiss();
         }
@@ -141,7 +151,7 @@ public class NewBathingSiteActivity extends AppCompatActivity implements LoaderM
             String temp = data.get(1);
             String base64Image = data.get(2);
 
-            //showWeatherDialog
+            // Show weather dialog.
             ShowWeatherDialog showWeatherDialog = ShowWeatherDialog.newInstance(description, temp, base64Image);
             showWeatherDialog.show(getSupportFragmentManager(), "showWeatherDialog");
         }

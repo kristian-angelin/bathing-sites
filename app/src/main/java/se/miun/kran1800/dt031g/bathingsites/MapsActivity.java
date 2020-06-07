@@ -5,7 +5,6 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -35,19 +34,24 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+/**
+ * Activity for showing Google maps and displaying markers for bathing sites.
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    // Objects for handling location changes.
     private FusedLocationProviderClient fusedLocationClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
-    private BathingSite[] bathingSites;
-    private ArrayList<Marker> markerArray = new ArrayList<Marker>();
-    private int VIEW_RADIUS;
-    boolean SITES_LOADED = false;
-    private Location currentLocation = null;
-    private Circle circle;
+    private BathingSite[] bathingSites;     // Stores all bathingsSites from database
+    private ArrayList<Marker> markerArray = new ArrayList<>();   // Saves all markers for easy show/hide
+
+    private int ViewRadius;         // View distance from device
+    boolean loadedSites = false;    // Used the report that async task has loaded database files.
+    private Location lastLocation;  // Used for checking if location has changed.
+    private Circle circle;          // Visual indicator for marker showing range
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        currentLocation = new Location("");
+        lastLocation = new Location("");
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         createLocationRequest();
@@ -73,38 +77,40 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Get radius from preferences times 1000 to convert to km.
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        ViewRadius = sharedPreferences.getInt(
+                "map_distance_to_show_sites",
+                getResources().getInteger(R.integer.default_map_distance)) * 1000;
+
+        // Create the circle with temporary position.
+        circle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(0,0))
+                .radius(ViewRadius)
+                .strokeColor(Color.RED));
+
+        // Check if location permission is granted.
+        if(locationPermissionGranted()) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            Toast.makeText(this, getString(R.string.location_permission_not_granted), Toast.LENGTH_LONG).show();
+            circle.setVisible(false);
+        }
+        // Prepare and load markers from database.
+        setupCustomMarker();
+        new LoadSiteMarkers().execute();
+    }
+
+    // Setup location request.
     protected void createLocationRequest() {
         locationRequest = LocationRequest.create();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    /**
-     * Manipulates the map once available.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        // Get radius from preferences times 1000 to convert to km.
-        VIEW_RADIUS = sharedPreferences.getInt(
-                "map_distance_to_show_sites",
-                getResources().getInteger(R.integer.default_map_distance)) * 1000;
-        // Create the circle with tempPos.
-        circle = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(0,0))
-                .radius(VIEW_RADIUS)
-                .strokeColor(Color.RED));
-        if(locationPermissionGranted()) {
-            mMap.setMyLocationEnabled(true);
-        } else {
-            Toast.makeText(this, "No permission to use location", Toast.LENGTH_LONG).show();
-        }
-        // Prepare and load markers from database.
-        setupCustomMarker();
-        new LoadSiteMarkers().execute();
     }
 
     // Start receiving updates.
@@ -123,25 +129,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     return;
                 }
                 for (Location location : locationResult.getLocations()) {
-                    if(location.getLatitude() != currentLocation.getLatitude() &&
-                            location.getLongitude() != currentLocation.getLongitude()) {
-                        currentLocation = location;
+
+                    // Only run if location has changed.
+                    if(location.getLatitude() != lastLocation.getLatitude() &&
+                            location.getLongitude() != lastLocation.getLongitude()) {
+                        lastLocation = location; // Update last location.
+
+                        // Move circle to center of device locatin.
                         circle.setCenter(new LatLng(location.getLatitude(), location.getLongitude()));
                         updateMarkers(location);
-                        if(!circle.isVisible()) {
-                            circle.setVisible(true);
-                        }
+
+                        // Update camera position.
                         mMap.animateCamera(CameraUpdateFactory.newLatLng(
                                 new LatLng(location.getLatitude(), location.getLongitude())));
                     }
                     // Only called once after sites are loaded to update markers and set camera.
                     // Will zoom camera when starting map activity.
-                    if(SITES_LOADED) {
+                    if(loadedSites) {
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                 new LatLng(location.getLatitude(), location.getLongitude()),
                                 getResources().getInteger(R.integer.map_camera_start_zoom)));
                         updateMarkers(location);
-                        SITES_LOADED = false;
+                        loadedSites = false;
+                        if(!circle.isVisible()) {
+                            circle.setVisible(true);
+                        }
                     }
                 }
             }
@@ -152,7 +164,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     markerLocation.setLatitude(marker.getPosition().latitude);
                     markerLocation.setLongitude(marker.getPosition().longitude);
                     // If inside circle radius, show marker
-                    if(location.distanceTo(markerLocation) < VIEW_RADIUS) {
+                    if(location.distanceTo(markerLocation) < ViewRadius) {
                         marker.setVisible(true);
                     }
                     else {
@@ -202,7 +214,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // Load phone call from database
                 database = BathingSiteDatabase.getInstance(getApplicationContext());
                 bathingSites = database.bathingSiteDao().getAllBathingsSites();
-
             } catch (Exception e) {
                 Log.d("Exception message", e.toString());
             }
@@ -212,7 +223,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String result) {
-            // Loop through all calls and place on map
+            // Loop through all sites and place on map
             for(BathingSite site : bathingSites) {
                 // Create marker
                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -228,7 +239,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 getString(R.string.form_date_for_temp) + ": " + site.dateForTemp));
                 markerArray.add(marker);
             }
-            SITES_LOADED = true;
+            loadedSites = true;
         }
     }
 }

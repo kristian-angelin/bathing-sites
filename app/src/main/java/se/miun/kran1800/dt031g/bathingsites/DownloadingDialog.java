@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-// Creates an downloading dialog.
+/**
+ * Creates an downloading dialog.
+ */
 public class DownloadingDialog extends DialogFragment {
 
     public DownloadingDialog() {}

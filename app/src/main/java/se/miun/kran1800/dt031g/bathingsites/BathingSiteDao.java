@@ -4,18 +4,20 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-// Dao interface for making database query's
+/**
+ * Dao interface for making database query's
+ */
 @Dao
 public interface BathingSiteDao {
-    // Add bathing site to database.
+    // Insert bathing site.
     @Insert
     void insertBathingSite(BathingSite bathingSite);
 
-    // Get total number of bathing sites in DB.
+    // Return int of total number of bathing sites in DB.
     @Query("SELECT COUNT(*) FROM bathing_site")
     int getTotalBathingSites();
 
-    // Check if bathing site already exist by comparing lat/lon.
+    // Check if bathing site already exist by comparing lat/lon. 1 = true 0 = false
     @Query("SELECT COUNT(*) FROM bathing_site WHERE latitude = :lat AND longitude = :lon")
     int checkForDuplicate(double lat, double lon);
 

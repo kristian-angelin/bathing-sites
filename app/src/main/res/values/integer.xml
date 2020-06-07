@@ -3,5 +3,5 @@
     <!-- Distance values for showing bathing sites on map in km -->
     <integer name="default_map_distance">50</integer>
     <integer name="min_map_distance">1</integer>
-    <integer name="max_map_distance">10000</integer>
+    <integer name="max_map_distance">1000</integer>
 </resources>

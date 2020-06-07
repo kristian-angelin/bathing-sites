@@ -168,10 +168,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     if(location.distanceTo(markerLocation) < ViewRadius) {
                         String newSnippet = marker.getSnippet().substring(0,marker.getSnippet().lastIndexOf("\n"));
-                        String distance = "Distance: " + location.distanceTo(markerLocation)/1000 + " km";
+                        float distanceFloat = location.distanceTo(markerLocation)/1000;
+                        String distanceString = "Distance: " + String.format("%.2f", distanceFloat) + " km";
                         marker.setVisible(true);
-                        marker.setSnippet(newSnippet + "\n" + distance);
-                        //marker.show
+                        marker.setSnippet(newSnippet + "\n" + distanceString);
                     }
                     else {
                         marker.setVisible(false);

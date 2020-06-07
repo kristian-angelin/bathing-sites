@@ -4,4 +4,6 @@
     <integer name="default_map_distance">50</integer>
     <integer name="min_map_distance">1</integer>
     <integer name="max_map_distance">1000</integer>
+    <!-- Camera zoom -->
+    <integer name="map_camera_start_zoom">8</integer>
 </resources>

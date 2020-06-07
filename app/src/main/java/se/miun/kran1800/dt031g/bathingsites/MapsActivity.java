@@ -26,6 +26,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -45,7 +46,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
 
-    private BathingSite[] bathingSites;     // Stores all bathingsSites from database
+    private BathingSite[] bathingSites;     // Stores all bathing Sites from database
     private ArrayList<Marker> markerArray = new ArrayList<>();   // Saves all markers for easy show/hide
 
     private int ViewRadius;         // View distance from device
@@ -164,8 +165,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     markerLocation.setLatitude(marker.getPosition().latitude);
                     markerLocation.setLongitude(marker.getPosition().longitude);
                     // If inside circle radius, show marker
+
                     if(location.distanceTo(markerLocation) < ViewRadius) {
+                        String newSnippet = marker.getSnippet().substring(0,marker.getSnippet().lastIndexOf("\n"));
+                        String distance = "Distance: " + location.distanceTo(markerLocation)/1000 + " km";
                         marker.setVisible(true);
+                        marker.setSnippet(newSnippet + "\n" + distance);
+                        //marker.show
                     }
                     else {
                         marker.setVisible(false);
@@ -230,13 +236,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .position(new LatLng(site.latitude, site.longitude))
                         .visible(false)
                         .title(site.name)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker_round))
                         .snippet(getString(R.string.form_description) + ": " + site.description + "\n" +
                                 getString(R.string.form_address) + ": " + site.address + "\n" +
                                 getString(R.string.form_latitude) + ": " + site.latitude + "\n" +
                                 getString(R.string.form_longitude) + ": " + site.longitude + "\n" +
                                 getString(R.string.form_grade) + ": " + site.grade + "\n" +
                                 getString(R.string.form_water_temp) + ": " + site.waterTemp + "\n" +
-                                getString(R.string.form_date_for_temp) + ": " + site.dateForTemp));
+                                getString(R.string.form_date_for_temp) + ": " + site.dateForTemp + "\n" +
+                                "Distance:"));
                 markerArray.add(marker);
             }
             loadedSites = true;

@@ -1,16 +1,19 @@
+# IntelliJ
 *.iml
-.gradle
-gradle.xml
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
 /.idea
-.DS_Store
+
+# Gradle files
+.gradle
 /build
+
+# OSX files
+.DS_Store
+
+# Won't uppload google key
+google_maps_api.xml
+
+# Misc
 /captures
 .externalNativeBuild
 .cxx
+/local.properties
